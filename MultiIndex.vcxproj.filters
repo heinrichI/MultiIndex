@@ -21,6 +21,9 @@
     <ClCompile Include="data_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="perfomance_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="indexer.h">
@@ -30,6 +33,15 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="data_util.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="searcher.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ordered_lists_merger.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="perfomance_util.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

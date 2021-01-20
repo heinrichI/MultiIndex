@@ -1,0 +1,3 @@
+b2 --build-dir=c:\SourceC++\boost_1_75_0\build --with-program_options --with-serialization link=static msvc stage
+b2 --build-dir=c:\SourceC++\boost_1_75_0\build --with-program_options --with-serialization variant=debug runtime-debugging=on runtime-link=static threading=multi address-model=32
+b2 --build-dir=c:\SourceC++\boost_1_75_0\build --with-program_options --with-serialization --with-thread --with-date_time --with-chrono link=static runtime-link=static runtime-debugging=on variant=debug msvc

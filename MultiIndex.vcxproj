@@ -72,7 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>c:\SourceC++\boost_1_52_0\;$(IncludePath)</IncludePath>
+    <IncludePath>c:\SourceC++\mklml_win_2018.0.3.20180406\include\;c:\SourceC++\boost_1_75_0\;$(IncludePath)</IncludePath>
+    <LibraryPath>c:\SourceC++\mklml_win_2018.0.3.20180406\lib\;$(SolutionDir)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -93,6 +94,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,11 +153,15 @@
   <ItemGroup>
     <ClCompile Include="data_util.cpp" />
     <ClCompile Include="indexer_launcher.cpp" />
+    <ClCompile Include="perfomance_util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="data_util.h" />
     <ClInclude Include="indexer.h" />
     <ClInclude Include="multitable.hpp" />
+    <ClInclude Include="ordered_lists_merger.h" />
+    <ClInclude Include="perfomance_util.h" />
+    <ClInclude Include="searcher.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
