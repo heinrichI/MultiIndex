@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="indexer_launcher.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="data_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="perfomance_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="searcher_tester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
