@@ -65,64 +65,99 @@ int subspaces_centroids_count;
 
 
 
-int SetOptions(int argc, char** argv) {
-  options_description description("Options");
-  description.add_options()
-    ("index_files_prefix,i", value<string>())
-    ("queries_file,q", value<string>())
-    ("queries_count,n", value<int>())
-    ("neighbours_count,k", value<int>())
-    ("groundtruth_file,g", value<string>())
-    ("coarse_vocabs_file,c", value<string>())
-    ("fine_vocabs_file,f", value<string>())
-    ("query_point_type,t", value<string>())
-    ("do_rerank,l", bool_switch(), "Flag B")
-    ("use_residuals,r", bool_switch(), "Flag R")
-    ("points_count,p", value<int>())
-    ("report_file,o", value<string>())
-    ("space_dim,d", value<int>())
-    ("subspaces_centroids_count,s", value<int>());
-  variables_map name_to_value;
-  try {
-    store(command_line_parser(argc, argv).options(description).run(), name_to_value);
-  } catch (const invalid_command_line_syntax &inv_syntax) {
-    switch (inv_syntax.kind()) {
-      case invalid_syntax::missing_parameter :
-        cout << "Missing argument for option '" << inv_syntax.tokens() << "'.\n";
-        break;
-      default:
-        cout << "Syntax error, kind " << int(inv_syntax.kind()) << "\n";
-        break;
-       };
-    return 1;
-  } catch (const unknown_option &unkn_opt) {
-    cout << "Unknown option '" << unkn_opt.get_option_name() << "'\n";
-    return 1;
-  }
-  if (name_to_value.count("help")) {
-    cout << description << "\n";
-    return 1;
-  }
+bool SetOptions(int argc, char** argv)
+{
+    options_description description("Options");
+    description.add_options()
+        ("index_files_prefix,i", value<string>())
+        ("queries_file,q", value<string>()->required(), "set queries_file")
+        ("queries_count,n", value<int>())
+        ("neighbours_count,k", value<int>())
+        ("groundtruth_file,g", value<string>())
+        ("coarse_vocabs_file,c", value<string>())
+        ("fine_vocabs_file,f", value<string>())
+        ("query_point_type,t", value<string>())
+        ("do_rerank,l", bool_switch(), "Flag B")
+        ("use_residuals,r", bool_switch(), "Flag R")
+        ("points_count,p", value<int>())
+        ("report_file,o", value<string>())
+        ("space_dim,d", value<int>())
+        ("subspaces_centroids_count,s", value<int>());
+    variables_map name_to_value;
+    try {
+        store(command_line_parser(argc, argv).options(description).run(), name_to_value);
+    }
+    catch (const invalid_command_line_syntax& inv_syntax) {
+        switch (inv_syntax.kind()) {
+        case invalid_syntax::missing_parameter:
+            cout << "Missing argument for option '" << inv_syntax.tokens() << "'.\n";
+            break;
+        default:
+            cout << "Syntax error, kind " << int(inv_syntax.kind()) << "\n";
+            break;
+        };
+        return false;
+    }
+    catch (const unknown_option& unkn_opt) {
+        cout << "Unknown option '" << unkn_opt.get_option_name() << "'\n";
+        return false;
+    }
 
-  coarse_vocabs_file =         name_to_value["coarse_vocabs_file"].as<string>();
-  fine_vocabs_file =           name_to_value["fine_vocabs_file"].as<string>();
-  SPACE_DIMENSION =            name_to_value["space_dim"].as<int>();
-  index_files_prefix =         name_to_value["index_files_prefix"].as<string>();
-  queries_file =               name_to_value["queries_file"].as<string>();
-  report_file =                name_to_value["report_file"].as<string>();
-  groundtruth_file =           name_to_value["groundtruth_file"].as<string>();
-  queries_count =              name_to_value["queries_count"].as<int>();
-  neighbours_count =           name_to_value["neighbours_count"].as<int>();
-  subspaces_centroids_count =  name_to_value["subspaces_centroids_count"].as<int>();
- 
-  do_rerank =                  (name_to_value["do_rerank"].as<bool>() == true) ? true : false;
-  mode =                       (name_to_value["use_residuals"].as<bool>() == true) ? USE_RESIDUALS : USE_INIT_POINTS;
-  if (name_to_value["query_point_type"].as<string>() == "FVEC") {
-    query_point_type = FVEC;
-  } else if(name_to_value["query_point_type"].as<string>() == "BVEC") {
-    query_point_type = BVEC;
-  }
-  return 0;
+    if (name_to_value.count("help")) {
+        cout << description << "\n";
+        return false;
+    }
+
+    if (name_to_value.count("coarse_vocabs_file"))
+        coarse_vocabs_file = name_to_value["coarse_vocabs_file"].as<string>();
+    if (name_to_value.count("fine_vocabs_file"))
+        fine_vocabs_file = name_to_value["fine_vocabs_file"].as<string>();
+    if (name_to_value.count("space_dim"))
+        SPACE_DIMENSION = name_to_value["space_dim"].as<int>();
+    if (name_to_value.count("index_files_prefix"))
+        index_files_prefix = name_to_value["index_files_prefix"].as<string>();
+    if (name_to_value.count("queries_file"))
+        queries_file = name_to_value["queries_file"].as<string>();
+    if (name_to_value.count("report_file"))
+        report_file = name_to_value["report_file"].as<string>();
+    if (name_to_value.count("groundtruth_file"))
+        groundtruth_file = name_to_value["groundtruth_file"].as<string>();
+    if (name_to_value.count("queries_count"))
+        queries_count = name_to_value["queries_count"].as<int>();
+    if (name_to_value.count("neighbours_count"))
+        neighbours_count = name_to_value["neighbours_count"].as<int>();
+    if (name_to_value.count("subspaces_centroids_count"))
+        subspaces_centroids_count = name_to_value["subspaces_centroids_count"].as<int>();
+
+    do_rerank = (name_to_value["do_rerank"].as<bool>() == true) ? true : false;
+    mode = (name_to_value["use_residuals"].as<bool>() == true) ? USE_RESIDUALS : USE_INIT_POINTS;
+    if (name_to_value.count("query_point_type"))
+    {
+        if (name_to_value["query_point_type"].as<string>() == "FVEC")
+        {
+            query_point_type = FVEC;
+        }
+        else if (name_to_value["query_point_type"].as<string>() == "BVEC") {
+            query_point_type = BVEC;
+        }
+    }
+
+    try
+    {
+        notify(name_to_value);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Error: " << e.what() << "\n";
+        return false;
+    }
+    catch (...)
+    {
+        std::cerr << "Unknown error!" << "\n";
+        return false;
+    }
+
+  return true;
 }
 
 template<class TSearcher>
@@ -159,8 +194,12 @@ void TestSearcher(TSearcher& searcher,
     std::cout << "Average search time(ms): "<<(double)(finish - start) / queries.size() << std::endl;
 }
 
-int main(int argc, char** argv) {
-  SetOptions(argc, argv);
+int main(int argc, char** argv) 
+{
+    bool result = SetOptions(argc, argv);
+    if (!result)
+        return 1;
+
   cout << "Options are set ...\n";
   Points queries;
   if(query_point_type == BVEC) {

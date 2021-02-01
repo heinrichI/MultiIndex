@@ -60,19 +60,25 @@ int points_count;
  */
 int multiplicity;
 
-int SetOptions(int argc, char** argv) {
+
+/**
+ * File to write report in
+ */
+string report_file;
+
+bool SetOptions(int argc, char** argv) {
   options_description description("Options");
   description.add_options()
     ("threads_count,t", value<int>())
     ("multiplicity,m", value<int>())
     ("points_file,p", value<string>())
     ("metainfo_file,z", value<string>())
-    ("coarse_vocabs_file,c", value<string>())
+    ("coarse_vocabs_file,c", value<string>()->required(), "set coarse_vocabs_file")
     ("fine_vocabs_file,f", value<string>())
     ("input_point_type,i", value<string>())
     ("build_coarse,b", bool_switch(), "Flag B")
     ("use_residuals,r", bool_switch(), "Flag R")
-    ("points_count,p", value<int>())
+    ("points_count,o", value<int>())
     ("coarse_quantization_file,q", value<string>())
     ("space_dim,d", value<int>())
     ("files_prefix,_", value<string>());
@@ -88,25 +94,34 @@ int SetOptions(int argc, char** argv) {
         cout << "Syntax error, kind " << int(inv_syntax.kind()) << "\n";
         break;
       };
-    return 1;
+    return false;
   } catch (const unknown_option& unkn_option) {
     cout << "Unknown option '" << unkn_option.get_option_name() << "'\n";
-    return 1;
+    return false;
   }
   if (name_to_value.count("help")) {
     cout << description << "\n";
-    return 1;
+    return false;
   }
 
-  THREADS_COUNT =              name_to_value["threads_count"].as<int>();
-  multiplicity =               name_to_value["multiplicity"].as<int>();
-  points_file =                name_to_value["points_file"].as<string>();
-  metainfo_file =              name_to_value["metainfo_file"].as<string>();
-  coarse_vocabs_file =         name_to_value["coarse_vocabs_file"].as<string>();
-  fine_vocabs_file =           name_to_value["fine_vocabs_file"].as<string>();
-  SPACE_DIMENSION =            name_to_value["space_dim"].as<int>();
-  files_prefix =               name_to_value["files_prefix"].as<string>();
-  points_count =               name_to_value["points_count"].as<int>();
+  if (name_to_value.count("threads_count"))
+      THREADS_COUNT =              name_to_value["threads_count"].as<int>();
+  if (name_to_value.count("multiplicity"))
+      multiplicity =               name_to_value["multiplicity"].as<int>();
+  if (name_to_value.count("points_file"))
+      points_file =                name_to_value["points_file"].as<string>();
+  if (name_to_value.count("metainfo_file"))
+      metainfo_file =              name_to_value["metainfo_file"].as<string>();
+  if (name_to_value.count("coarse_vocabs_file"))
+      coarse_vocabs_file =         name_to_value["coarse_vocabs_file"].as<string>();
+  if (name_to_value.count("fine_vocabs_file"))
+      fine_vocabs_file =           name_to_value["fine_vocabs_file"].as<string>();
+  if (name_to_value.count("space_dim"))
+      SPACE_DIMENSION =            name_to_value["space_dim"].as<int>();
+  if (name_to_value.count("files_prefix"))
+      files_prefix =               name_to_value["files_prefix"].as<string>();
+  if (name_to_value.count("points_count"))
+      points_count =               name_to_value["points_count"].as<int>();
  
   build_coarse_quantizations = (name_to_value["build_coarse"].as<bool>() == true) ? true : false;
   mode = name_to_value["use_residuals"].as<bool>() == true ? USE_RESIDUALS : USE_INIT_POINTS;
@@ -114,16 +129,42 @@ int SetOptions(int argc, char** argv) {
   if (name_to_value.find("coarse_quantization_file") != name_to_value.end()) {
     coarse_quantizations_file =  name_to_value["coarse_quantization_file"].as<string>();
   }
-  if (name_to_value["input_point_type"].as<string>() == "FVEC") {
-    point_type = FVEC;
-  } else if(name_to_value["input_point_type"].as<string>() == "BVEC") {
-    point_type = BVEC;
+  if (name_to_value.count("query_point_type"))
+  {
+      if (name_to_value["input_point_type"].as<string>() == "FVEC") {
+          point_type = FVEC;
+      }
+      else if (name_to_value["input_point_type"].as<string>() == "BVEC") {
+          point_type = BVEC;
+      }
   }
-  return 0;
+
+
+  try
+  {
+      notify(name_to_value);
+  }
+  catch (std::exception& e)
+  {
+      std::cerr << "Error: " << e.what() << "\n";
+      return false;
+  }
+  catch (...)
+  {
+      std::cerr << "Unknown error!" << "\n";
+      return false;
+  }
+
+  return true;
+
 }
 
-int main(int argc, char** argv) {
-  SetOptions(argc, argv);
+int main(int argc, char** argv) 
+{
+    bool result = SetOptions(argc, argv);
+    if (!result)
+        return 1;
+
   cout << "Options are set ...\n";
   vector<Centroids> coarse_vocabs;
   vector<Centroids> fine_vocabs;
