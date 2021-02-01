@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>c:\SourceC++\mkl.2021.1.1.52\include\;c:\SourceC++\boost_1_75_0\;$(IncludePath)</IncludePath>
-    <LibraryPath>c:\SourceC++\mkl.2021.1.1.52\win-x86\;$(SolutionDir)\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>f:\E\SourceMultiIndex\MultiIndex\lib\mkl.2021.1.1.52\include\;f:\E\SourceMultiIndex\boost_1_75_0\;c:\SourceC++\mkl.2021.1.1.52\include\;c:\SourceC++\boost_1_75_0\;$(IncludePath)</IncludePath>
+    <LibraryPath>f:\E\SourceMultiIndex\MultiIndex\lib\mkl.2021.1.1.52\win-x86\;c:\SourceC++\mkl.2021.1.1.52\win-x86\;$(SolutionDir)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

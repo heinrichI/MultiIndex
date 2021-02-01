@@ -242,3 +242,4 @@ ModelManifest.xml
 .fake/
 /dist/*
 /xianyi-OpenBLAS-9a7e0ec/*
+/lib/mkl.2021.1.1.52/*
